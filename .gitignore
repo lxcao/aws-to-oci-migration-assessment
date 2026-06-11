@@ -1,0 +1,13 @@
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+
+# Generated local outputs from template/script smoke tests
+outputs/
+feedback-summary.md
+feedback-summary.json
+
+# Local editor and tooling state
+.idea/
+.vscode/

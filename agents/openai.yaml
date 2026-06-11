@@ -1,0 +1,3 @@
+display_name: AWS to OCI Migration Assessment
+short_description: Bilingual AWS-to-OCI migration artifacts
+default_prompt: Create AWS-to-OCI migration discovery artifacts, feasibility reports, or SOW drafts using reusable bilingual templates.
