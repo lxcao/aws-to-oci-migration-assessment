@@ -1,33 +1,35 @@
-# AWS to OCI Migration Assessment Skill 使用指南
+# AWS to OCI Migration Assessment Skill Guide
 
-这个 skill 用于 OCI 售前迁移场景，帮助 Cloud Engineer 复用从 AWS 迁移到 OCI 的三阶段交付流程：
+中文版本见 [README_CN.md](README_CN.md).
 
-1. 生成 AWS 到 OCI 迁移调研表。
-2. 根据客户填写的调研反馈生成迁移调研与可行性评估报告。
-3. 根据评估报告生成云平台迁移服务工作说明书 SOW 初稿。
+This skill is designed for OCI presales migration scenarios. It helps Cloud Engineers reuse a standard three-stage workflow for migrating customers from AWS to OCI:
 
-skill 支持中文、英文和中英双语输出。模板是通用版本，不包含任何客户专用信息。
+1. Create an AWS-to-OCI migration discovery survey workbook.
+2. Generate a migration discovery and feasibility assessment report based on customer feedback.
+3. Generate a cloud platform migration Statement of Work (SOW) draft based on the assessment report.
 
-## 1. 确认安装位置
+The skill supports Chinese, English, and bilingual Chinese/English outputs. All bundled templates are generic and do not contain customer-specific information.
 
-Codex 通常可使用的位置：
+## 1. Confirm Installation Paths
+
+Codex can typically use the skill from:
 
 ```bash
 ~/.codex/skills/aws-to-oci-migration-assessment
 ```
 
-其他支持 Agent Skills 标准的 agent，例如 OpenCode，通常可使用的位置：
+Other agents that support the Agent Skills standard, such as OpenCode, can typically use the skill from:
 
 ```bash
 ~/.agents/skills/aws-to-oci-migration-assessment
 ```
 
-skill 目录中应包含：
+The skill directory should contain:
 
 ```text
 SKILL.md
 README.md
-README_EN.md
+README_CN.md
 pyproject.toml
 uv.lock
 assets/
@@ -36,17 +38,17 @@ scripts/
 agents/openai.yaml
 ```
 
-## 2. 了解目录内容
+## 2. Understand the Directory Structure
 
-核心文件：
+Main agent-facing instruction file:
 
 ```text
 SKILL.md
 ```
 
-这是 agent 自动加载的主要说明文件。正常使用时不需要手工修改。
+This is the file agents load automatically. In normal usage, you do not need to edit it.
 
-模板文件：
+Template files:
 
 ```text
 assets/aws_to_oci_migration_survey_template.xlsx
@@ -54,7 +56,7 @@ assets/aws_to_oci_feasibility_report_template.docx
 assets/aws_to_oci_migration_sow_template.docx
 ```
 
-参考资料：
+Reference files:
 
 ```text
 references/service-mapping.md
@@ -64,206 +66,206 @@ references/sow-framework.md
 references/bilingual-terms.md
 ```
 
-辅助脚本：
+Helper scripts:
 
 ```text
 scripts/generate_generic_templates.py
 scripts/extract_feedback_summary.py
 ```
 
-## 3. 准备 uv 运行环境
+## 3. Prepare the uv Runtime
 
-辅助脚本通过 `uv` 管理 Python 依赖。第一次运行脚本前，进入 skill 目录并同步依赖：
+The helper scripts use `uv` to manage Python dependencies. Before running the scripts for the first time, enter the skill directory and sync dependencies:
 
 ```bash
 cd ~/.agents/skills/aws-to-oci-migration-assessment
 uv sync
 ```
 
-如果你在 Codex 的 skill 目录使用，也可以进入：
+If you are using the Codex skill directory, enter:
 
 ```bash
 cd ~/.codex/skills/aws-to-oci-migration-assessment
 uv sync
 ```
 
-检查脚本能否运行：
+Verify that the scripts can run:
 
 ```bash
 uv run python scripts/generate_generic_templates.py --output-dir ./outputs
 ```
 
-依赖声明在：
+Dependencies are declared in:
 
 ```text
 pyproject.toml
 ```
 
-锁定版本在：
+Resolved dependency versions are locked in:
 
 ```text
 uv.lock
 ```
 
-## 4. 第一次使用：让 agent 触发 skill
+## 4. First Use: Trigger the Skill in an Agent
 
-在 Codex、OpenCode 或其他支持 skills 的 agent 中，可以直接提出类似请求：
+In Codex, OpenCode, or another agent that supports skills, use a prompt like:
 
 ```text
-使用 aws-to-oci-migration-assessment skill，帮我为一个客户生成 AWS 到 OCI 迁移调研表，输出中文 Excel。
+Use the aws-to-oci-migration-assessment skill to create an English AWS-to-OCI migration discovery workbook.
 ```
 
-或：
+Or:
 
 ```text
 Use the aws-to-oci-migration-assessment skill to create a bilingual AWS-to-OCI migration discovery workbook.
 ```
 
-如果 agent 没有自动触发，可以明确给出 skill 路径：
+If the agent does not trigger the skill automatically, provide the skill path explicitly:
 
 ```text
-请使用 ~/.agents/skills/aws-to-oci-migration-assessment 这个 skill。
+Please use the skill at ~/.agents/skills/aws-to-oci-migration-assessment.
 ```
 
-## 5. 阶段一：生成迁移调研表
+## 5. Stage 1: Create the Migration Discovery Survey
 
-推荐输入：
+Recommended prompt:
 
 ```text
-使用 aws-to-oci-migration-assessment skill，生成一份 AWS 到 OCI 迁移调研表。
-要求：
-1. 输出 Excel。
-2. 使用中文。
-3. 覆盖 ECS、网络、S3、RDS MySQL、Redis、ELB、EFS、EC2、OS、块存储、自建 NGINX API Gateway、自建 Kafka。
-4. 每类调研内容放在独立 sheet。
-5. 保留“反馈”列供客户填写。
+Use the aws-to-oci-migration-assessment skill to create an AWS-to-OCI migration discovery survey.
+Requirements:
+1. Output an Excel workbook.
+2. Use English.
+3. Cover ECS, networking, S3, RDS MySQL, Redis, ELB, EFS, EC2, OS, and block storage, self-managed NGINX API Gateway, and self-managed Kafka.
+4. Put each survey area in a separate sheet.
+5. Keep a Feedback column for the customer to complete.
 ```
 
-agent 应使用或复制这个模板：
+The agent should use or copy this template:
 
 ```text
 assets/aws_to_oci_migration_survey_template.xlsx
 ```
 
-如果需要重新生成通用模板，可以运行：
+To regenerate generic templates manually, run:
 
 ```bash
 uv run python scripts/generate_generic_templates.py --output-dir ./outputs
 ```
 
-生成后，把 Excel 发给客户填写。客户应重点填写每个 sheet 的 `Feedback / 反馈` 列，也可以补充 `AWS Current State / AWS现状`、`Initial Risk / 初步风险` 和 `Notes / 备注`。
+After generation, send the Excel workbook to the customer. The customer should primarily complete the `Feedback / 反馈` column. They may also fill in `AWS Current State / AWS现状`, `Initial Risk / 初步风险`, and `Notes / 备注`.
 
-## 6. 阶段二：分析客户反馈并生成评估报告
+## 6. Stage 2: Analyze Customer Feedback and Generate the Assessment Report
 
-客户返回填写后的 Excel 后，推荐输入：
+After the customer returns the completed Excel workbook, use a prompt like:
 
 ```text
-使用 aws-to-oci-migration-assessment skill，读取客户填写后的迁移调研表。
-请分析每个 sheet 的“反馈”列，整理 AWS 当前状态、OCI 目标方案、迁移风险、缓解措施和待确认问题。
-然后生成一份中文 Word 格式的 OCI 迁移调研与可行性评估报告。
+Use the aws-to-oci-migration-assessment skill to read the completed migration discovery workbook.
+Analyze the Feedback column in each sheet and summarize the AWS current state, OCI target options, migration risks, mitigations, and open questions.
+Then generate an English Word-format OCI migration discovery and feasibility assessment report.
 ```
 
-如果先想生成反馈摘要，可以运行：
+To generate a feedback summary first, run:
 
 ```bash
 uv run python scripts/extract_feedback_summary.py completed-survey.xlsx --out feedback-summary.md --json feedback-summary.json
 ```
 
-评估报告应基于这个模板：
+The assessment report should be based on:
 
 ```text
 assets/aws_to_oci_feasibility_report_template.docx
 ```
 
-报告应至少包含：
+The report should include at least:
 
-- 摘要。
-- 调研范围与假设。
-- AWS 当前状态摘要。
-- OCI 目标方案。
-- 分服务可行性评估。
-- 迁移方案与工具。
-- 风险清单。
-- POC 与验收矩阵。
-- 迁移路线图。
-- 待确认事项。
+- Executive summary.
+- Discovery scope and assumptions.
+- AWS current state summary.
+- OCI target options.
+- Service-by-service feasibility assessment.
+- Migration approach and tools.
+- Risk register.
+- POC and acceptance matrix.
+- Migration roadmap.
+- Open questions.
 
-风险评分规则见：
+Risk scoring rules are documented in:
 
 ```text
 references/assessment-framework.md
 ```
 
-AWS 到 OCI 服务映射参考见：
+AWS-to-OCI service mapping guidance is documented in:
 
 ```text
 references/service-mapping.md
 ```
 
-## 7. 阶段三：生成 SOW 初稿
+## 7. Stage 3: Generate the SOW Draft
 
-在评估报告完成后，推荐输入：
+After the assessment report is complete, use a prompt like:
 
 ```text
-使用 aws-to-oci-migration-assessment skill，基于这份迁移调研与可行性评估报告，生成一份云平台迁移服务工作说明书 SOW 初稿。
-要求：
-1. Word 格式。
-2. 中文。
-3. 明确服务范围、非服务范围、交付物、验收标准、双方职责、假设依赖、风险与变更管理。
+Use the aws-to-oci-migration-assessment skill to generate a cloud platform migration Statement of Work draft based on this migration discovery and feasibility assessment report.
+Requirements:
+1. Word format.
+2. English.
+3. Clearly define service scope, out-of-scope items, deliverables, acceptance criteria, roles and responsibilities, assumptions and dependencies, risks, and change management.
 ```
 
-SOW 应基于这个模板：
+The SOW should be based on:
 
 ```text
 assets/aws_to_oci_migration_sow_template.docx
 ```
 
-SOW 框架参考：
+SOW structure guidance is documented in:
 
 ```text
 references/sow-framework.md
 ```
 
-注意：SOW 应从评估报告生成，不建议直接从原始调研表生成。这样可以避免遗漏风险、前置条件和非服务范围。
+Note: generate the SOW from the assessment report, not directly from the raw survey workbook. This helps avoid missing risks, prerequisites, assumptions, and exclusions.
 
-## 8. 选择输出语言
+## 8. Choose the Output Language
 
-中文输出：
+Chinese output:
 
 ```text
-请输出中文版本。
+Please generate the Chinese version.
 ```
 
-英文输出：
+English output:
 
 ```text
 Please generate the English version.
 ```
 
-中英双语输出：
+Bilingual output:
 
 ```text
-请输出中英双语版本，中文段落后跟英文段落。
+Please generate a bilingual Chinese/English version, with each Chinese paragraph followed by the English paragraph.
 ```
 
-术语表参考：
+Terminology reference:
 
 ```text
 references/bilingual-terms.md
 ```
 
-## 9. 客户信息脱敏要求
+## 9. Customer Data Sanitization Requirements
 
-不要把客户专用信息写回 skill 的模板或参考文件中，包括：
+Do not write customer-specific information back into the skill templates or reference files, including:
 
-- 客户名称。
-- 应用系统名称。
-- AWS account ID、OCI tenancy ID、OCID、ARN。
-- region、availability zone、IP、CIDR、域名、主机名。
-- 成本、容量、性能、业务数据。
-- 合同条款、报价、人员联系方式。
+- Customer names.
+- Application or system names.
+- AWS account IDs, OCI tenancy IDs, OCIDs, or ARNs.
+- Regions, availability zones, IP addresses, CIDRs, domains, and hostnames.
+- Cost, capacity, performance, or business data.
+- Contract terms, pricing, or personal contact information.
 
-如果需要在文档中保留位置，使用占位符：
+Use placeholders when the document needs these fields:
 
 ```text
 [Customer Name]
@@ -276,77 +278,77 @@ references/bilingual-terms.md
 [Migration Wave]
 ```
 
-## 10. 技术准确性要求
+## 10. Technical Accuracy Requirements
 
-在生成客户正式交付材料前，涉及以下内容时应核对 Oracle 官方文档：
+Before producing customer-final deliverables, validate the following against Oracle official documentation:
 
-- OCI 服务能力。
-- 服务限制。
-- 区域可用性。
-- 价格。
-- 迁移工具。
-- 产品名称。
-- AWS 服务到 OCI 服务的等价关系。
+- OCI service capabilities.
+- Service limits.
+- Regional availability.
+- Pricing.
+- Migration tools.
+- Product names.
+- AWS-to-OCI service equivalence.
 
-不要假设一一对应。例如：
+Do not assume one-to-one equivalence. For example:
 
-- ECS 可能迁移到 OKE、Container Instances 或 Compute 自建容器运行环境。
-- RDS MySQL 可能迁移到 MySQL HeatWave，也可能采用自建 MySQL。
-- 自建 Kafka 可能迁移到 OCI Streaming、OCI Streaming with Apache Kafka，或继续自建 Kafka。
-- 自建 NGINX API Gateway 不一定能完全等价迁移到 OCI API Gateway，需做 fit-gap 分析。
+- ECS may migrate to OKE, Container Instances, or a Compute-based container runtime.
+- RDS MySQL may migrate to MySQL HeatWave or to self-managed MySQL.
+- Self-managed Kafka may migrate to OCI Streaming, OCI Streaming with Apache Kafka, or remain self-managed on OCI.
+- Self-managed NGINX API Gateway may not map completely to OCI API Gateway and requires fit-gap analysis.
 
-## 11. 常见问题
+## 11. FAQ
 
-### Q1：这个 skill 会自动生成最终客户文档吗？
+### Q1: Does this skill automatically create final customer-ready documents?
 
-可以辅助生成，但最终交付前仍需要 CE 审阅、补充客户具体信息、核对 OCI 官方文档，并确认风险、范围和商务边界。
+It can help create drafts, but the CE must still review, add customer-specific information, validate OCI documentation, and confirm risks, scope, and commercial boundaries.
 
-### Q2：客户只填写了部分反馈怎么办？
+### Q2: What if the customer only completed part of the survey?
 
-先使用反馈摘要脚本或让 agent 汇总缺失项，再把缺失内容整理成 `待确认事项 / Open Questions`。不要在评估报告中假设未知信息。
+Generate a feedback summary first, then convert missing or unclear items into `Open Questions`. Do not assume unknown information in the assessment report.
 
-### Q3：能不能直接复用以前客户的报告？
+### Q3: Can I reuse a previous customer's report?
 
-可以参考结构，但必须脱敏。不要把客户名、应用、region、IP、容量、成本、合同信息写入通用 skill。
+You may reuse the structure, but you must sanitize it. Do not place customer names, applications, regions, IPs, capacity, cost, or contract details into the generic skill.
 
-### Q4：OpenCode 能不能使用？
+### Q4: Can OpenCode use this skill?
 
-如果 OpenCode 已启用 Agent Skills，并扫描 `~/.agents/skills`，则可以识别这个 skill。若没有自动识别，请在 prompt 中显式提供 skill 路径：
+Yes, if OpenCode has Agent Skills enabled and scans `~/.agents/skills`. If it does not auto-detect the skill, provide the path explicitly:
 
 ```text
 ~/.agents/skills/aws-to-oci-migration-assessment
 ```
 
-### Q5：脚本运行失败怎么办？
+### Q5: What if the helper scripts fail?
 
-先在 skill 目录运行：
+First run this from the skill directory:
 
 ```bash
 uv sync
 ```
 
-然后用 `uv run` 执行脚本：
+Then run scripts with `uv run`:
 
 ```bash
 uv run python scripts/generate_generic_templates.py --output-dir ./outputs
 ```
 
-脚本依赖由 `pyproject.toml` 管理。如果当前 agent 无法运行 `uv`，可以让 agent 使用它自己的 Office 文档能力，或在该环境中安装 `pyproject.toml` 声明的依赖后再运行脚本。
+Script dependencies are managed in `pyproject.toml`. If the current agent environment cannot run `uv`, ask the agent to use its own Office document tooling or install the dependencies declared in `pyproject.toml` before running the scripts.
 
-## 12. 推荐完整工作流
+## 12. Recommended End-to-End Workflow
 
-第一次客户迁移项目可以按这个顺序执行：
+For a first customer migration project, use this sequence:
 
-1. 让 agent 使用 skill 生成迁移调研表。
-2. CE 审阅调研表，按客户实际范围删减 sheet 或问题。
-3. 发给客户填写 `反馈` 列。
-4. 收回 Excel 后，生成反馈摘要。
-5. 基于反馈摘要和调研表生成可行性评估报告。
-6. CE 核对服务映射、风险和 OCI 官方文档。
-7. 基于评估报告生成 SOW 初稿。
-8. CE、项目经理、商务或法务按公司流程审阅 SOW。
-9. 输出正式客户版本。
+1. Ask the agent to use this skill to generate the migration discovery workbook.
+2. Review the workbook and remove sheets or questions that are not relevant to the customer scope.
+3. Send the workbook to the customer and ask them to complete the `Feedback` column.
+4. After receiving the completed Excel workbook, generate a feedback summary.
+5. Generate the feasibility assessment report from the feedback summary and survey workbook.
+6. Validate service mappings, risks, and OCI official documentation.
+7. Generate the SOW draft from the assessment report.
+8. Have the CE, project manager, commercial team, or legal team review the SOW according to the company process.
+9. Produce the final customer-facing version.
 
-## 13. 注意事项
+## 13. Important Note
 
-所有生成的文档都必须经过 CE 审核后才递交给客户。agent 生成的调研表、评估报告和 SOW 初稿只能作为工作草稿，不能绕过 CE 对技术准确性、客户信息、风险判断、服务范围和商务边界的最终确认。
+All generated documents must be reviewed by a CE before they are delivered to the customer. Agent-generated discovery workbooks, assessment reports, and SOW drafts are working drafts only and must not bypass CE validation of technical accuracy, customer information, risk judgment, service scope, and commercial boundaries.
