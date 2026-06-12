@@ -134,7 +134,7 @@ Use the aws-to-oci-migration-assessment skill to create a bilingual AWS-to-OCI m
 要求：
 1. 输出 Excel。
 2. 使用中文。
-3. 覆盖 ECS、网络、S3、RDS MySQL、Redis、ELB、EFS、自建 EC2/OS/块存储、自建 NGINX API Gateway、自建 Kafka。
+3. 覆盖 ECS、网络、S3、RDS MySQL、Redis、ELB、EFS、EC2、OS、块存储、自建 NGINX API Gateway、自建 Kafka。
 4. 每类调研内容放在独立 sheet。
 5. 保留“反馈”列供客户填写。
 ```
@@ -346,3 +346,7 @@ uv run python scripts/generate_generic_templates.py --output-dir ./outputs
 7. 基于评估报告生成 SOW 初稿。
 8. CE、项目经理、商务或法务按公司流程审阅 SOW。
 9. 输出正式客户版本。
+
+## 13. 注意事项
+
+所有生成的文档都必须经过 CE 审核后才递交给客户。agent 生成的调研表、评估报告和 SOW 初稿只能作为工作草稿，不能绕过 CE 对技术准确性、客户信息、风险判断、服务范围和商务边界的最终确认。

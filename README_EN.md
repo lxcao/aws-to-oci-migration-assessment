@@ -134,7 +134,7 @@ Use the aws-to-oci-migration-assessment skill to create an AWS-to-OCI migration 
 Requirements:
 1. Output an Excel workbook.
 2. Use English.
-3. Cover ECS, networking, S3, RDS MySQL, Redis, ELB, EFS, self-managed EC2/OS/block storage, self-managed NGINX API Gateway, and self-managed Kafka.
+3. Cover ECS, networking, S3, RDS MySQL, Redis, ELB, EFS, EC2, OS, and block storage, self-managed NGINX API Gateway, and self-managed Kafka.
 4. Put each survey area in a separate sheet.
 5. Keep a Feedback column for the customer to complete.
 ```
@@ -346,3 +346,7 @@ For a first customer migration project, use this sequence:
 7. Generate the SOW draft from the assessment report.
 8. Have the CE, project manager, commercial team, or legal team review the SOW according to the company process.
 9. Produce the final customer-facing version.
+
+## 13. Important Note
+
+All generated documents must be reviewed by a CE before they are delivered to the customer. Agent-generated discovery workbooks, assessment reports, and SOW drafts are working drafts only and must not bypass CE validation of technical accuracy, customer information, risk judgment, service scope, and commercial boundaries.
